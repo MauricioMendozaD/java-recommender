@@ -98,17 +98,25 @@ public class FirstRatings {
 
     public static void testLoadMovies() {
 
-        byte comedyMovies = 0;
-        byte longMovies = 0;
+        int comedyMovies = 0;
+        int longMovies = 0;
+
+        ArrayList<Director> directors = new ArrayList<>();
+        ArrayList<Movie> movieListCopy = new ArrayList<>();
+        ArrayList<Movie> movieListThirdCopy = new ArrayList<>();
+        String directorFound = "";
+        boolean asFoundDirector = false;
+        Movie movieWithMoreDirectors = null;
 
         try {
-            ArrayList<Movie> movieList = loadMovies("ratedmovies_short.csv");
+            ArrayList<Movie> movieList = loadMovies("ratedmoviesfull.csv");
+            movieListCopy = movieList;
+            movieListThirdCopy = movieList;
 
             System.out.println("Total Movies: " + movieList.size());
 
             for (Movie movie : movieList) {
-
-                System.out.println(movie.toString());
+                //System.out.println(movie.toString());
 
                 if (movie.getGenres().toLowerCase().contains("comedy")) {
                     comedyMovies++;
@@ -117,10 +125,79 @@ public class FirstRatings {
                 if (movie.getMinutes() > 150) {
                     longMovies++;
                 }
+
+            }
+
+            // arma la lista de directores.
+
+            for (Movie movie : movieListCopy) {
+
+                asFoundDirector = false;
+                StringTokenizer tokens = new StringTokenizer(movie.getDirector(), ",");
+
+                while (tokens.hasMoreTokens()) {
+                    String director = tokens.nextToken().trim();
+
+                    if (directors.isEmpty()) {
+                        directors.add(new Director(director));
+                    } else {
+                        for (Director directorTemp : directors) {
+                            if (directorTemp.getName().equalsIgnoreCase(director)) {
+                                asFoundDirector = true;
+                                break;
+                            } else {
+                                directorFound = director;
+                            }
+                        }
+
+                        if (!asFoundDirector) {
+                            directors.add(new Director(directorFound));
+                        }
+
+                    }
+
+                }
+            }
+
+            System.out.println("Total directors: " + directors.size());
+
+            // cuenta las veces que el director a dirigido una pelicula.
+
+            int maxDirectorPerMovie = 0;
+            for (int i = 0; i < directors.size() ; i++) {
+                int movieCount = 0;
+                for (Movie movie : movieListThirdCopy) {
+                    if (movie.getDirector().toLowerCase().contains(directors.get(i).getName().toLowerCase())) {
+                        movieCount++;
+                    }
+
+                    // Obtiene los directores por pelicula y almacena la pelicula con mas directores.
+                    StringTokenizer tokens = new StringTokenizer(movie.getDirector(), ",");
+
+                    if (tokens.countTokens() >= maxDirectorPerMovie) {
+                        movieWithMoreDirectors = movie;
+                        maxDirectorPerMovie = tokens.countTokens();
+                    }
+
+                }
+
+                directors.get(i).setMovieCount(movieCount);
+            }
+
+            // Busca el director que mas peliculas ha dirigido
+            Director biggestDirector = new Director("mauro", 0);
+
+            for (int i = 0; i < directors.size(); i++) {
+                
+                if (biggestDirector.getMovieCount() < directors.get(i).getMovieCount()) {
+                    biggestDirector = directors.get(i);
+                }
             }
 
             System.out.println("Comedy movies: " + comedyMovies);
             System.out.println("Long Movies (>150m): " + longMovies);
+            System.out.println("Director with more movies: " + biggestDirector.getName() + ", Total movies: " + biggestDirector.getMovieCount());
+            System.out.println("Movie with more directors: " + movieWithMoreDirectors.getTitle() + ", Total directors: " + maxDirectorPerMovie);
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -131,7 +208,7 @@ public class FirstRatings {
 
     public static void testLoadRaters() {
 
-        String raterId = "2";
+        String raterId = "193";
         int rates = 0;
         ArrayList<Rater> topRaters = new ArrayList<>();
         Rater newTopRater = null;
@@ -143,14 +220,14 @@ public class FirstRatings {
         String movieNotFound = "";
 
         try {
-            ArrayList<Rater> raterList = loadRaters("ratings_short.csv");
+            ArrayList<Rater> raterList = loadRaters("ratings.csv");
 
             System.out.println("Total raters: " + raterList.size());
 
             for (Rater rater : raterList) {
                 newTopRaterFound = false;
 
-                System.out.println("Rater ID: " + rater.getID() + " Ratings made: " + rater.numRatings());
+                //System.out.println("Rater ID: " + rater.getID() + " Ratings made: " + rater.numRatings());
 
                 if (rater.getID().equals(raterId)) {
                     rates = rater.numRatings();
@@ -191,13 +268,11 @@ public class FirstRatings {
                             if (movieRated.equals(ratedMovie)) {
                                 movieRatedFound = true;
                                 break;
-                            } else {
-                                movieNotFound = movieRated;
                             }
                         }
 
                         if (!movieRatedFound) {
-                            moviesRated.add(movieNotFound);
+                            moviesRated.add(movieRated);
                         }
                     }
                 }
