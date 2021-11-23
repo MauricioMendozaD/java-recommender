@@ -1,5 +1,7 @@
-// An immutable passive data object (PDO) to represent the rating data
+package com.coursera.recommender;
+
 public class Rating implements Comparable<Rating> {
+	
     private String item;
     private double value;
 

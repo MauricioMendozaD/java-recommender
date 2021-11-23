@@ -1,18 +1,13 @@
-
-/**
- * Write a description of class Rater here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
+package com.coursera.recommender;
 
 import java.util.*;
 
-public class Rater {
+public class PlainRater implements Rater {
+	
     private String myID;
     private ArrayList<Rating> myRatings;
 
-    public Rater(String id) {
+    public PlainRater(String id) {
         myID = id;
         myRatings = new ArrayList<Rating>();
     }

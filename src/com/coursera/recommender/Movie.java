@@ -1,8 +1,11 @@
-import java.util.ArrayList;
-import java.util.Arrays;
+package com.coursera.recommender;
+
+//import java.util.ArrayList;
+//import java.util.Arrays;
 
 // An immutable passive data object (PDO) to represent item data
 public class Movie {
+	
     private String id;
     private String title;
     private int year;
