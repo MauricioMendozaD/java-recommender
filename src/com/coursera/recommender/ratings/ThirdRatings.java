@@ -24,7 +24,6 @@ public class ThirdRatings {
         
         try {
         	
-			//myMovies = ratings.loadMovies(moviefile);
 			myRaters = ratings.loadRaters("data/" + ratingsfile);
 			
 		} catch (IOException e) {
@@ -84,58 +83,14 @@ public class ThirdRatings {
     	
     	ArrayList<Rating> response = new ArrayList<>();
     	
-    	//for (String movieId : moviesIds) {
-    		for (Rating rating : moviesWithMinimumRaters) {
-    			if (moviesIds.contains(rating.getItem())) {
-    				response.add(rating);
-    			}
-    		}
-    	//}
-    	
+		for (Rating rating : moviesWithMinimumRaters) {
+			if (moviesIds.contains(rating.getItem())) {
+				response.add(rating);
+			}
+		}
+	
     	return response;
     }
-    
-    
-    /*public String getTitle(String id) {
-    	
-    	String movieTitle = "";
-    	boolean isMovieFound = false;
-    	
-    	for (Movie movie : myMovies) {
-    		if (movie.getID().equals(id)) {
-    			movieTitle = movie.getTitle();
-    			isMovieFound = true;
-    			break;
-    		}
-    	}
-    	
-    	if (!isMovieFound) {
-    		movieTitle = "ID was not found";
-    	}
-    	
-    	return movieTitle;
-    }*/
-    
-    /*public String getID(String title) {
-    	String id = "";
-    	
-    	for (Movie movie : myMovies) {
-    		if (movie.getTitle().equalsIgnoreCase(title)) {
-    			id = movie.getID();
-    			break;
-    		}
-    	}
-    	
-    	if (id.isEmpty()) {
-    		id = "NO SUCH TITLE.";
-    	}
-    	
-    	return id;
-    }*/
-    
-    /*public int getMovieSize() {
-    	return myMovies.size();
-    }*/
     
     public int getRaterSize() {
     	return myRaters.size();
